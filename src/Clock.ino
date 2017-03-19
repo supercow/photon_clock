@@ -7,57 +7,74 @@
 
 #include "application.h"
 #include "LiquidCrystal/LiquidCrystal.h"
-#include "rest_client.h"
-#include "jsmnSpark.h"
 
 //LiquidCrystal lcd(A1, A0, D4, D5, D6, D7, D0, D1, D2, D3);
 LiquidCrystal lcd(A1, A0, D4, D5, D6, D7);
 
-int lastSync = 0;
-int syncInterval = 5;
+// Sync every 3 hours
+#define SYNC_INTERVAL (60 * 60 * 1000 * 3)
 
 int tempPin = A2;
 double temp = 0.0;
 double tempF = 0.0;
 int tempVoltage = 0;
-RestClient timezone = RestClient("api.timezonedb.com");
 
-String parseResponse(String json) {
-  jsmn_parser p;
-  jsmn_init(&p);
-  int max_tokens = 32;
-  jsmntok_t tok[max_tokens];
-  status = jsmn_parse(&p, json, tok, max_tokens);
+#define TS_WAITING 0
+#define TS_PUBLISHED 1
+#define TS_RECEIVED 2
+#define TS_SYNC_WAIT 3
+#define TS_SYNC_COMPLETE 4
 
-  if (status != JSMN_SUCCESS) {
-    Serial.println("Failed to parse json response");
-    return "";
-  } else {
-    for(i = 0; i < max_tokens; i++) {
-      if ((jsoneq(JSON_STRING, &tok[i], "status") == 0) {
-    }
-  }
-}
+int ts_state = TS_WAITING;
+int offset = -5;
+String tzName = "EST";
 
-String getTimezone() {
-  Serial.println("Getting timezone...");
-  String resp = "";
-  int status = timezone.get("/v2/get-time-zone?key=JUE3CZJK6PRH&format=json&by=zone&zone=America/New_York&fields=gmtOffset,dst", &resp);
-  Serial.println("REST response: " + resp);
-  if (status != 200) {
-    Serial.println("Failed to retrieve timezone: " + status);
-    return "";
-  } else {
-    String parsed = parseResponse();
-    return parsed;
-  }
+void timezoneHandler(const char *event, const char *data) {
+
+  char* token = strtok(strdup(data)," ");
+  offset = (atoi(token) / 3600);
+  token = strtok(NULL, " ");
+  tzName = token;
+
+  ts_state = TS_RECEIVED;
+  Serial.print("Set offset to ");
+  Serial.println(offset, DEC);
+
+  Serial.println("Set tzName to " + tzName);
 }
 
 void syncTime() {
-  getTimezone();
-  Particle.syncTime();
-  lastSync = Time.now();
-  Serial.println("Synchronized time to " + Time.format(Time.now(), TIME_FORMAT_ISO8601_FULL));
+  String data = "";
+  switch (ts_state) {
+    case TS_WAITING:
+      Serial.println("Sent timezone request.");
+      Particle.publish("timezone", data, PRIVATE);
+      ts_state = TS_PUBLISHED;
+      break;
+    case TS_PUBLISHED:
+      // handler changes state to TS_RECEIVED, do nothing here
+      Serial.println("Waiting for timezone API hook...");
+      break;
+    case TS_RECEIVED:
+      Serial.println("Received time zone, requesting sync.");
+      //Time.zone(offset);
+      Particle.syncTime();
+      ts_state = TS_SYNC_WAIT;
+      break;
+    case TS_SYNC_WAIT:
+      if (Particle.syncTimePending()) {
+	Serial.println("Waiting for Particle sync");
+      } else {
+        Serial.println("Received sync from Particle");
+        ts_state = TS_SYNC_COMPLETE;
+      }
+      break;
+    case TS_SYNC_COMPLETE:
+      ts_state = TS_WAITING;
+      Serial.println("Synchronized time to " + Time.format(Time.now(), TIME_FORMAT_ISO8601_FULL));
+      delay(250);
+      break;
+  }
 }
 
 // setup() runs once, when the device is first turned on.
@@ -67,19 +84,29 @@ void setup() {
   lcd.begin(16,2);
   lcd.print("Initializing...");
   syncTime();
-  Time.zone(-5);
 
   pinMode(tempPin, INPUT);
   Particle.variable("tempVoltage", &tempVoltage, INT);
   Particle.variable("temp", &temp, DOUBLE);
   Particle.variable("tempF", &tempF, DOUBLE);
 
+  Particle.subscribe("hook-response/timezone",timezoneHandler,MY_DEVICES);
+
 }
 
 // loop() runs over and over again, as quickly as it can execute.
 void loop() {
-  if (Time.now() > lastSync + syncInterval) {
+  unsigned long lastSync = Particle.timeSyncedLast();
+  if(millis() - lastSync > SYNC_INTERVAL) {
+    Serial.println("Last sync " + Time.format(lastSync, TIME_FORMAT_ISO8601_FULL));
     syncTime();
+  }
+
+  if(lastSync = 0) {
+    lcd.setCursor(0,0);
+    lcd.print("Syncing time...");
+    lcd.setCursor(0,1);
+    lcd.print("                ");
   }
 
   tempVoltage = analogRead(tempPin);
@@ -87,6 +114,7 @@ void loop() {
   tempF = ((temp * 9.0) / 5.0) + 32.0;
   String strTemp = (String)((int)tempF);
 
+  Time.zone(offset);
   int currentTime = Time.now();
   String strDOW = Time.format(currentTime,"%a");
   String strDate = Time.format(currentTime, "%Y-%m-%d");
@@ -95,6 +123,6 @@ void loop() {
   lcd.setCursor(0,0);
   lcd.print(strDOW + " " + strDate + "  ");
   lcd.setCursor(0,1);
-  lcd.print(strTime + "  " + strTemp + (char)223 + "F");
+  lcd.print(strTime + " " + tzName + " " + strTemp + (char)223);
   delay(100);
 }
