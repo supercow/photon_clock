@@ -19,8 +19,7 @@ int tempPin = A2;
 double temp = 0.0;
 double tempF = 0.0;
 int tempVoltage = 0;
-//RestClient timezone = RestClient("freegeoip.net");
-RestClient timezone = RestClient("104.31.251.10");
+RestClient timezone = RestClient("api.timezonedb.com");
 //RestClient tzOffset = RestClient("",);
 
 void csvToArray(char* csv) {
@@ -30,7 +29,7 @@ void csvToArray(char* csv) {
 String getTimezone() {
   Serial.println("Getting timezone...");
   String resp = "";
-  int status = timezone.get("/csv", &resp);
+  int status = timezone.get("/v2/get-time-zone?key=JUE3CZJK6PRH&format=json&by=zone&zone=America/New_York&fields=gmtOffset,dst", &resp);
   Serial.println("REST response: " + resp);
   if (status != 200) {
     Serial.println("Failed to retrieve timezone: " + status);

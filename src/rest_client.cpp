@@ -11,6 +11,7 @@
 */
 
 #include "rest_client.h"
+#define HTTP_DEBUG
 
 #ifdef HTTP_DEBUG
 #define HTTP_DEBUG_PRINT(string) (Serial.print(string))
@@ -108,7 +109,8 @@ int RestClient::request(const char* method, const char* path,
     write(method);
     write(" ");
     write(path);
-    write(" HTTP/1.1\r\n");
+    //write(" HTTP/1.1\r\n");
+    write(" HTTP/1.0\r\n");
     for(int i=0; i<num_headers; i++){
       write(headers[i]);
       write("\r\n");
