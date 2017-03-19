@@ -8,6 +8,7 @@
 #include "application.h"
 #include "LiquidCrystal/LiquidCrystal.h"
 #include "rest_client.h"
+#include "jsmnSpark.h"
 
 //LiquidCrystal lcd(A1, A0, D4, D5, D6, D7, D0, D1, D2, D3);
 LiquidCrystal lcd(A1, A0, D4, D5, D6, D7);
@@ -20,10 +21,22 @@ double temp = 0.0;
 double tempF = 0.0;
 int tempVoltage = 0;
 RestClient timezone = RestClient("api.timezonedb.com");
-//RestClient tzOffset = RestClient("",);
 
-void csvToArray(char* csv) {
-  
+String parseResponse(String json) {
+  jsmn_parser p;
+  jsmn_init(&p);
+  int max_tokens = 32;
+  jsmntok_t tok[max_tokens];
+  status = jsmn_parse(&p, json, tok, max_tokens);
+
+  if (status != JSMN_SUCCESS) {
+    Serial.println("Failed to parse json response");
+    return "";
+  } else {
+    for(i = 0; i < max_tokens; i++) {
+      if ((jsoneq(JSON_STRING, &tok[i], "status") == 0) {
+    }
+  }
 }
 
 String getTimezone() {
@@ -35,8 +48,8 @@ String getTimezone() {
     Serial.println("Failed to retrieve timezone: " + status);
     return "";
   } else {
-    Serial.println("Got timezone " + resp);
-    return resp;
+    String parsed = parseResponse();
+    return parsed;
   }
 }
 
