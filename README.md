@@ -7,13 +7,13 @@ and flash a 16x2 smart clock driven by a [Particle Photon](https://store.particl
 
 ## Parts list
 
-1. PCB (see below for details)
-1. [HD44780 assembled LCD](https://www.adafruit.com/products/1447)
-1. Trim potentiometer (should come with the HD44780)
-1. [TMP36 temperature sensor](https://www.adafruit.com/products/165) (not needed if using external weather)
-1. [Particle Photon with headers](https://store.particle.io/#photon)
-1. ~50-60ohm THT resistor
-1. 10nF capacitor
+- PCB (see below for details)
+- [HD44780 assembled LCD](https://www.adafruit.com/products/1447)
+- Trim potentiometer (should come with the HD44780)
+- [TMP36 temperature sensor](https://www.adafruit.com/products/165) (not needed if using external weather)
+- [Particle Photon with headers](https://store.particle.io/#photon)
+- ~50-60ohm THT resistor
+- 10nF capacitor
 
 ## PCB details
 
@@ -26,9 +26,16 @@ and their cool purple soldermask.
 
 ## Building the software
 
-Before proceeding, you will need a registered, Wi-Fi configured Photon.
+### Pre-requisites
 
-See instructions in the `code/build.sh` script to build and flash the Photon.
+- A registered, Wi-Fi enabled Photon, ideally already connected
+- The Particle IDE or command line tools installed and configured
+- If you wish to use the command line version, a \*nix compatible shell is
+  required
+
+See instructions in the `code/build.sh` script to build and flash the Photon via
+the command line. To flash via the Particle Atom IDE, open the project in `code`
+and flash as usual.
 
 If you wish to use the built-in temperature sensor, you will need to comment out
 the following line:
