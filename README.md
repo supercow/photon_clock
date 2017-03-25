@@ -1,35 +1,48 @@
-# Clock
+# Photon Clock
 
-A Particle project named Clock
+This repository contains all of the software and schematics required to build
+and flash a 16x2 smart clock driven by a [Particle Photon](https://store.particle.io/#photon).
 
-## Welcome to your project!
+![Picture of completed clock](photon_clock.jpg)
 
-Every new Particle project is composed of 3 important elements that you'll see have been created in your project directory for Clock.
+## Parts list
 
-#### ```/src``` folder:  
-This is the source folder that contains the firmware files for your project. It should *not* be renamed. 
-Anything that is in this folder when you compile your project will be sent to our compile service and compiled into a firmware binary for the Particle device that you have targeted.
+1. PCB (see below for details)
+1. [HD44780 assembled LCD](https://www.adafruit.com/products/1447)
+1. Trim potentiometer (should come with the HD44780)
+1. [TMP36 temperature sensor](https://www.adafruit.com/products/165) (not needed if using external weather)
+1. [Particle Photon with headers](https://store.particle.io/#photon)
+1. ~50-60ohm THT resistor
+1. 10nF capacitor
 
-If your application contains multiple files, they should all be included in the `src` folder. If your firmware depends on Particle libraries, those dependencies are specified in the `project.properties` file referenced below.
+## PCB details
 
-#### ```.ino``` file:
-This file is the firmware that will run as the primary application on your Particle device. It contains a `setup()` and `loop()` function, and can be written in Wiring or C/C++. For more information about using the Particle firmware API to create firmware for your Particle device, refer to the [Firmware Reference](https://docs.particle.io/reference/firmware/) section of the Particle documentation.
+Eagle 8 format schematics are included in the "eagle" directory in this
+repository. If you wish to order a PCB, you will need to use a service that
+supports Eagle .brd files, or generate your own Gerbers.
 
-#### ```project.properties``` file:  
-This is the file that specifies the name and version number of the libraries that your project depends on. Dependencies are added automatically to your `project.properties` file when you add a library to a project using the `particle library add` command in the CLI or add a library in the Desktop IDE.
+I recommend [OSH Park](https://www.oshpark.com/) for ease of use, cost, quality,
+and their cool purple soldermask.
 
-## Adding additional files to your project
+## Building the software
 
-#### Projects with multiple sources
-If you would like add additional files to your application, they should be added to the `/src` folder. All files in the `/src` folder will be sent to the Particle Cloud to produce a compiled binary.
+Before proceeding, you will need a registered, Wi-Fi configured Photon.
 
-#### Projects with external libraries
-If your project includes a library that has not been registered in the Particle libraries system, you should create a new folder named `/lib/<libraryname>/src` under `/<project dir>` and add the `.h` and `.cpp` files for your library there. All contents of the `/lib` folder and subfolders will also be sent to the Cloud for compilation.
+See instructions in the `code/build.sh` script to build and flash the Photon.
 
-## Compiling your project
+If you wish to use the built-in temperature sensor, you will need to comment out
+the following line:
 
-When you're ready to compile your project, make sure you have the correct Particle device target selected and run `particle compile <platform>` in the CLI or click the Compile button in the Desktop IDE. The following files in your project folder will be sent to the compile service:
+`#define EXTERNAL_TEMP true`
 
-- Everything in the `/src` folder, including your `.ino` application file
-- The `project.properties` file for your project
-- Any libraries stored under `lib/<libraryname>/src`
+## External integrations
+
+In order for the clock to set the correct timezone, you will need to configure
+the `timezone.json` external integration in the `integrations` directory in the
+Particle console.
+
+In order for the clock to collect external weather, you will need to configure
+the `weather.json` external integration.
+
+**Please note** that you must supply your own API key or none of the
+integrations will work.
