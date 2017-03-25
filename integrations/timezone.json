@@ -1,0 +1,6 @@
+{
+  "event": "timezone",
+  "url": "http://api.timezonedb.com/v2/get-time-zone?key=ENTER_YOUR_TIMEZONE_API_KEY_HERE&format=json&by=zone&zone=America/New_York&fields=gmtOffset,dst,abbreviation",
+  "requestType": "GET",
+  "responseTemplate": "{{gmtOffset}} {{abbreviation}}"
+}

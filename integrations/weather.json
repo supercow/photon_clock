@@ -1,0 +1,7 @@
+{
+  "event": "weather",
+  "url": "http://api.wunderground.com/api/YOUR_WUNDERGROUND_API_KEY_HERE/conditions/q/NY/New_York_City.json",
+  "requestType": "GET",
+  "noDefaults": true,
+  "template": "{{current_observation.temp_f}}"
+}
