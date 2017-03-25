@@ -22,7 +22,8 @@ repository. If you wish to order a PCB, you will need to use a service that
 supports Eagle .brd files, or generate your own Gerbers.
 
 I recommend [OSH Park](https://www.oshpark.com/) for ease of use, cost, quality,
-and their cool purple soldermask.
+and their cool purple soldermask. You can order this board directly with [this](https://www.oshpark.com/orders/cart)
+link.
 
 ## Building the software
 
