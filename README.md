@@ -46,3 +46,13 @@ the `weather.json` external integration.
 
 **Please note** that you must supply your own API key or none of the
 integrations will work.
+
+To configure each custom integration:
+1. Go to [https://console.particle.io/integrations](https://console.particle.io/integrations) in your web browser
+1. Click "NEW INTEGRATION"
+1. Click "Webhook", then "Custom JSON"
+1. Paste the contents of the relevant `.json` file from the `integrations`
+   directory
+1. Edit the URL section to include your API key
+1. Click "CREATE WEBHOOK"
+
