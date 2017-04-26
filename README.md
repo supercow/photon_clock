@@ -33,7 +33,7 @@ link.
 
 ## 3D printed enclosure details
 
-![CAD rendering of 3D printed case](enclosure.png)
+![CAD rendering of 3D printed enclosure](enclosure.png)
 
 Autodesk Fusion 360 source files and printable STL files are included in the "enclosure" directory in this repository.
 
