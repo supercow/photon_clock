@@ -15,6 +15,12 @@ and flash a 16x2 smart clock driven by a [Particle Photon](https://store.particl
 - ~50-60ohm THT resistor
 - 10nF capacitor
 
+### 3D printed enclosure
+- Enclosure itself (see below for details)
+- 2x M2x20mm machine screws
+- 2x M2 nuts
+- [Optional] 30mm cooling fan (requires fasteners and electrical tape)
+
 ## PCB details
 
 Eagle 8 format schematics are included in the "eagle" directory in this
@@ -24,6 +30,16 @@ supports Eagle .brd files, or generate your own Gerbers.
 I recommend [OSH Park](https://www.oshpark.com/) for ease of use, cost, quality,
 and their cool purple soldermask. You can order this board directly with [this](https://www.oshpark.com/orders/cart)
 link.
+
+## 3D printed enclosure details
+
+![CAD rendering of 3D printed case](enclosure.png)
+
+Autodesk Fusion 360 source files and printable STL files are included in the "enclosure" directory in this repository.
+
+### Assembly notes
+* Print using 100% infill; no supports necessary.
+* If using a cooling fan, cover the top of the partition that separates the Photon board from the temperature sensor with electrical tape. This will create a seal between the enclosure bottom and the PCB to block pushed air from impacting temperature readings. Fan is intended to be mounted externally using the mounting holes on the enclosure bottom.
 
 ## Building the software
 
