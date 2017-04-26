@@ -17,8 +17,8 @@ and flash a 16x2 smart clock driven by a [Particle Photon](https://store.particl
 
 ### 3D printed enclosure
 - Enclosure itself (see below for details)
-- 2x M2x20mm machine screws
-- 2x M2 nuts
+- 4x M2x20mm machine screws
+- 4x M2 nuts
 - [Optional] 30mm cooling fan (requires fasteners and electrical tape)
 
 ## PCB details
