@@ -20,6 +20,7 @@ and flash a 16x2 smart clock driven by a [Particle Photon](https://store.particl
 - 4x M2x20mm machine screws
 - 4x M2 nuts
 - [Optional] 30mm cooling fan (requires fasteners and electrical tape)
+- [Optional] Self-adhesive velcro strips
 
 ## PCB details
 
@@ -33,13 +34,14 @@ link.
 
 ## 3D printed enclosure details
 
-![CAD rendering of 3D printed case](enclosure.png)
+![CAD rendering of 3D printed enclosure](enclosure.png)
 
 Autodesk Fusion 360 source files and printable STL files are included in the "enclosure" directory in this repository.
 
 ### Assembly notes
 * Print using 100% infill; no supports necessary.
 * If using a cooling fan, cover the top of the partition that separates the Photon board from the temperature sensor with electrical tape. This will create a seal between the enclosure bottom and the PCB to block pushed air from impacting temperature readings. Fan is intended to be mounted externally using the mounting holes on the enclosure bottom.
+* Enclosure is intended to be mounted under a computer monitor with velcro but works just fine unmounted. Velcro should be adhered to the enclosure side without the honeycomb cutouts.
 
 ## Building the software
 
