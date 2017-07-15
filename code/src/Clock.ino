@@ -153,7 +153,11 @@ void loop() {
   String strTemp = (String)((int)tempF);
 #else
   if ((millis() - lastWeatherUpdate > WEATHER_SYNC_INTERVAL) || lastWeatherUpdate == 0) {
-    updateWeather();
+    if ( (millis() -  lastWeatherUpdate > WEATHER_SYNC_INTERVAL * 4) && lastWeatherUpdate != 0 ){
+      System.reset();
+    } else {
+      updateWeather();
+    }
   }
   String strTemp = weather;
 #endif
